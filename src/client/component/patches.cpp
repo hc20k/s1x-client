@@ -140,7 +140,7 @@ namespace patches
 			}
 
 			// DB_ReadRawFile
-			return reinterpret_cast<const char*(*)(const char*, char*, int)>(SELECT_VALUE(0x140180E30, 0x140273080))(filename, buf, size);
+			return reinterpret_cast<const char* (*)(const char*, char*, int)>(SELECT_VALUE(0x140180E30, 0x140273080))(filename, buf, size);
 		}
 
 		void aim_assist_add_to_target_list(void* a1, void* a2)

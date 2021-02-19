@@ -6,6 +6,8 @@
 #include "game_console.hpp"
 #include "server_list.hpp"
 
+#include "trickshot.hpp"
+
 #include <utils/hook.hpp>
 
 namespace input
@@ -35,6 +37,10 @@ namespace input
 			if (game::environment::is_mp() && !server_list::sl_key_event(key, down))
 			{
 				return;
+			}
+
+			if (key == 110 && down == 1) {
+				trickshot::n_key_pressed();
 			}
 
 			cl_key_event_hook.invoke<void>(local_client_num, key, down, arg4);

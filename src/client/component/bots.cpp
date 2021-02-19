@@ -29,7 +29,9 @@ namespace bots
 			}
 
 			// SV_BotGetRandomName
-			auto* bot_name = reinterpret_cast<const char* (*)()>(0x1404267E0)();
+			//auto* bot_name = reinterpret_cast<const char* (*)()>(0x1404267E0)();
+			//const char* bot_name = (const char*)bot_names[rand() % 14];
+			const char* bot_name = "bot";
 			auto* bot_ent = game::SV_AddBot(bot_name);
 			if (bot_ent)
 			{

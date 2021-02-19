@@ -169,6 +169,9 @@ int main()
 			if (!component_loader::post_start()) return 0;
 
 			auto mode = detect_mode_from_arguments();
+
+			mode = launcher::mode::multiplayer;
+
 			if (mode == launcher::mode::none)
 			{
 				const launcher launcher;

@@ -175,6 +175,11 @@ namespace game
 
 	WEAK symbol<GfxDrawMethod_s> gfxDrawMethod{ 0x14CDFAFE8, 0x14D80FD98 };
 
+	// trickshot
+	WEAK symbol<void(game::playerState_s*, game::vec3_t*)> G_GetPlayerEyePosition{ 0, 0x1402dc250 };
+	WEAK symbol<void(game::mp::gentity_s*, game::vec3_t*, int)> SetClientOrigin{ 0, 0x1402dc4c0 };
+
+
 	namespace mp
 	{
 		WEAK symbol<gentity_s> g_entities{ 0, 0x144758C70 };

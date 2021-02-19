@@ -63,6 +63,11 @@ namespace game
 		DW_LOGON_COMPLETE = 0xB,
 	};
 
+	enum scr_string_t
+	{
+		scr_string_t_dummy = 0x0,
+	};
+
 	enum bdLobbyErrorCode : uint32_t
 	{
 		BD_NO_ERROR = 0x0,

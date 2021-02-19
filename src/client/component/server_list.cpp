@@ -254,7 +254,7 @@ namespace server_list
 			}
 		}
 
-		void lui_open_menu_stub(int /*controllerIndex*/, const char* /*menu*/, int /*a3*/, int /*a4*/,
+		void lui_open_menu_stub(int /*controllerIndex*/, const char* menu, int /*a3*/, int /*a4*/,
 			unsigned int /*a5*/)
 		{
 			refresh_server_list();

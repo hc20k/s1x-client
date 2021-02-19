@@ -22,7 +22,7 @@ namespace branding
 		{
 			const auto* const build_num = ui_get_formatted_build_number_hook.invoke<const char*>();
 
-			return utils::string::va("%s (%s)", VERSION, build_num);
+			return utils::string::va("%s (%s) ^:TS", VERSION, build_num);
 		}
 	}
 
@@ -49,6 +49,7 @@ namespace branding
 
 			scheduler::loop([]()
 			{
+				return;
 				const auto x = 4;
 				const auto y = 4;
 				const auto scale = 1.0f;
