@@ -1,5 +1,8 @@
-# S1x: Client
+# S1xTS: Client
+*View S1x here: https://github.com/XLabsProject/s1x-client*
 ## s1x, but made for spinning
+
+## **THIS PROJECT IS NOWHERE NEAR READY.***
 
 ## Compile from source
 
