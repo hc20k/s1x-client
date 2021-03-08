@@ -39,10 +39,6 @@ namespace input
 				return;
 			}
 
-			if (key == 110 && down == 1) {
-				trickshot::n_key_pressed();
-			}
-
 			cl_key_event_hook.invoke<void>(local_client_num, key, down, arg4);
 		}
 	}

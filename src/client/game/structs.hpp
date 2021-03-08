@@ -867,7 +867,7 @@ namespace game
 		ASSET_TYPE_COUNT,
 	};
 
-	enum weapClass_t {
+	enum class weapClass_t {
 		WEAPCLASS_RIFLE = 0x0,
 		WEAPCLASS_SNIPER = 0x1,
 		WEAPCLASS_MG = 0x2,

@@ -4,7 +4,6 @@
 
 namespace trickshot
 {
-	void n_key_pressed();
 
 };
 

@@ -10,6 +10,7 @@
 
 game::dvar_t* ts_botLocationRadius;
 game::dvar_t* ts_enableNoSpread;
+game::dvar_t* ts_enableUnlimitedAmmo;
 
 game::vec3_t saved_location = { -1 };
 game::vec3_t saved_bot_location = { -1 };
@@ -32,6 +33,15 @@ namespace trickshot {
 		game_console::print(0, "Saved location: %f, %f, %f", saved_location[0], saved_location[1], saved_location[2]);
 	}
 
+	void load_location() {
+		if (saved_location[0] == -1) {
+			ssc("e \"^1Error: saved location doesn't exist.\"");
+		}
+		else {
+			game::SetClientOrigin(&game::mp::g_entities[0], &saved_location, 0);
+		}
+	}
+
 	void save_bot_location() {
 		ssc("e \"^:Saved bot location.\"");
 
@@ -50,15 +60,6 @@ namespace trickshot {
 			if (ent.client) {
 				game::SetClientOrigin(&ent, &offset_location, 0);
 			}
-		}
-	}
-
-	void n_key_pressed() {
-		if (saved_location[0] == -1) {
-			ssc("e \"^1Error: saved location doesn't exist.\"");
-		}
-		else {
-			game::SetClientOrigin(&game::mp::g_entities[0], &saved_location, 0);
 		}
 	}
 
@@ -89,19 +90,12 @@ namespace trickshot {
 			game::G_GivePlayerWeapon(ps, game::G_GetWeaponForName("defaultweapon_mp"), 0, 0, 0, 0, 0, 0);
 		}
 
-		void BG_srand(int* out) {
-			if (ts_enableNoSpread->current.enabled)
-				*out = 0;
-			else
-				*out = (((*out * 0x343fd + 0x269ec3) * 0x343fd + 0x269ec3) * 0x343fd + 0x269ec3) * 0x343fd + 0x269ec3;
-		}
-
 		void on_host_spawned(game::mp::gentity_s* ent) {
 			ent->flags ^= 1; // god mode
 
 			if (!is_first_spawn) {
 				is_first_spawn = true;
-				command::execute(utils::string::va("spawnBot %d", game::Dvar_FindVar("party_maxplayers")->current.integer - 1), true);
+				//command::execute(utils::string::va("spawnBot %d", game::Dvar_FindVar("party_maxplayers")->current.integer - 1), true);
 			}
 		}
 
@@ -116,6 +110,7 @@ namespace trickshot {
 						origin[1] = saved_location[1];
 						origin[2] = saved_location[2];
 					}
+					game_console::print(0, "Health: %d", ent->client->__pad0[0x1D0]);
 				}
 				else {
 					if (saved_bot_location[0] != -1) {
@@ -136,11 +131,11 @@ namespace trickshot {
 				return 0;
 			}
 
-			return 999;
+			return 9999;
 		}
 		
 		float BG_GetSurfacePenetrationDepth(unsigned int weapon, bool p2, int p3) {
-			return 999.f;
+			return 9999.f;
 		}
 
 	}
@@ -150,7 +145,6 @@ namespace trickshot {
 	public:
 		void post_unpack() override
 		{
-			utils::hook::call(0x1402c9a1b, &BG_srand); // No spread
 			clientspawn_hook.create(0x1402db5a0, &ClientSpawn);
 			bg_getsurfacepenetrationdepth_hook.create(0x1401641a0, &BG_GetSurfacePenetrationDepth);
 			bg_getdamage_hook.create(0x140169f70, &BG_GetDamage);
@@ -160,6 +154,11 @@ namespace trickshot {
 				save_location();
 			});
 
+			command::add("ts_loadLocation", []()
+			{
+				load_location();
+			});
+
 			command::add("ts_botSaveLocation", []()
 			{
 				save_bot_location();
@@ -167,12 +166,7 @@ namespace trickshot {
 
 			ts_botLocationRadius = game::Dvar_RegisterInt("ts_botLocationRadius", 50, 0, 500, game::DVAR_FLAG_SAVED, "The distance the bots can stray from the saved bot location.");
 			ts_enableNoSpread = game::Dvar_RegisterBool("ts_enableNoSpread", true, game::DVAR_FLAG_SAVED, "Disables weapon fire randomness.");
-
-			command::add("ts_addBot", []()
-				{
-					auto* ent = game::SV_AddTestClient(0);
-					game_console::print(0, "added bot @ %p", &ent);
-				});
+			ts_enableUnlimitedAmmo = game::Dvar_RegisterBool("ts_enableUnlimitedAmmo", true, game::DVAR_FLAG_SAVED, "Enables infinite ammo.");
 
 			command::add("trickshot", []()
 			{
@@ -180,7 +174,10 @@ namespace trickshot {
 				command::execute("ui_gametype dm", true);
 				command::execute("scr_dm_scorelimit 1", true);
 				command::execute("scr_dm_timelimit 0", true);
-				command::execute("onlinemode 1", true);
+				command::execute("onlinegame 1", true);
+				command::execute("xstartprivateparty", true);
+				command::execute("xblive_privatematch 1", true);
+				command::execute("startentitlements", true);
 
 				// Patch bots so they don't kill
 				utils::hook::nop(0x14042a082, 5); // Bot_UpdateThreat
